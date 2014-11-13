@@ -26,7 +26,16 @@ def create_agent
 end
 
 def delete_agent
+  cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+            "-i #{new_resource.instance} "\
+            "-u #{new_resource.username} "\
+            "-p #{new_resource.password} "\
+            "-d /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}"
 
+  cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
+
+  Chef::Log.info "Deleting agent #{new_resource.name}"
+  cmd.run_command
 end
 
 def enable_agent
