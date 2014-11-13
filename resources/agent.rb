@@ -29,4 +29,10 @@ attribute :username, :kind_of => String, :required => true
 attribute :password, :kind_of => String, :required => true
 attribute :instance, :kind_of => String, :required => true
 attribute :target, :kind_of => String, :required => true
+
+# Instance types: author, publish. This helps defining whether the agent path should contain agents.publish or agents.author
+attribute :instance_type, :kind_of => String, :required => true
+
+# Agent types: replication, reverse_replication, flush
 attribute :type, :kind_of => String, :required => true
+attribute :title, :kind_of => String, :required => true
