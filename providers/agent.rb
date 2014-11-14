@@ -21,6 +21,49 @@ def whyrun_supported?
   true
 end
 
+# Common parameters for replication agent
+repl_agent_common = 
+  "-n enabled -v true "\
+  "-n jcr:primaryType -v nt:unstructured "\
+  "-n logLevel -v info "\
+  "-n retryDelay -v 60000 "\
+  "-n jcr:description -v \"Replication agent\" "\
+  "-n serializationType -v durbo "\
+  "-n sling:resourceType -v cq/replication/components/agent "\
+  "-n cq:template -v /libs/cq/replication/templates/agent"
+
+# Common parameters for reverse replication agent
+reverse_repl_agent_common =
+  "-n enabled -v true "\
+  "-n jcr:primaryType -v nt:unstructured "\
+  "-n logLevel -v info "\
+  "-n retryDelay -v 60000 "\
+  "-n jcr:description -v \"Reverse replication agent\" "\
+  "-n serializationType -v durbo "\
+  "-n sling:resourceType -v cq/replication/components/revagent "\
+  "-n cq:template -v /libs/cq/replication/templates/revagent "\
+  "-n protocolHTTPMethod -v GET "\
+  "-n reverseReplication -v true"
+
+# Common parameters for cache invalidation (flush) agent
+flush_agent_common =
+  "-n enabled -v true "\
+  "-n jcr:primaryType -v nt:unstructured "\
+  "-n logLevel -v error "\
+  "-n retryDelay -v 60000 "\
+  "-n jcr:description -v \" agent\" "\
+  "-n serializationType -v flush "\
+  "-n sling:resourceType -v cq/replication/components/agent "\
+  "-n cq:template -v /libs/cq/replication/templates/agent "\
+  "-n protocolHTTPMethod -v GET "\
+  "-n reverseReplication -v true "\
+  "-n protocolHTTPHeaders -v \"CQ-Action:{action}\" "\
+  "-n protocolHTTPHeaders -v \"CQ-Handle:{path}\" "\
+  "-n protocolHTTPHeaders -v \"CQ-Path:{path}\" "\
+  "-n noVersioning -v true "\
+  "-n triggerReceive -v true "\
+  "-n triggerSpecific -v true"
+
 def create_agent
 
 end
@@ -34,6 +77,7 @@ def delete_agent
 
   cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
 
+  Chef::Log.debug "Executing #{cmd_str}"
   Chef::Log.info "Deleting agent #{new_resource.name}"
   cmd.run_command
 end
@@ -43,11 +87,12 @@ def enable_agent
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
-            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content"
+            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content "\
             "-n enabled -v true"
 
   cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
 
+  Chef::Log.debug "Executing #{cmd_str}"
   Chef::Log.info "Enabling agent #{new_resource.name}"
   cmd.run_command
 end
@@ -57,11 +102,12 @@ def disable_agent
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
-            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content"
+            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content "\
             "-n enabled -v false"
 
   cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
 
+  Chef::Log.debug "Executing #{cmd_str}"
   Chef::Log.info "Disabling agent #{new_resource.name}"
   cmd.run_command
 end
@@ -76,6 +122,7 @@ def activate_agent
 
   cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
 
+  Chef::Log.debug "Executing #{cmd_str}"
   Chef::Log.info "Activating agent #{new_resource.name}"
   cmd.run_command
 end
@@ -90,10 +137,10 @@ def deactivate_agent
 
   cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
 
+  Chef::Log.debug "Executing #{cmd_str}"
   Chef::Log.info "Deactivating agent #{new_resource.name}"
   cmd.run_command
 end
-
 
 # Available actions
 
@@ -104,7 +151,7 @@ end
 
 # Delete agent
 action :delete do
-
+  delete_agent
 end
 
 # Enable agent

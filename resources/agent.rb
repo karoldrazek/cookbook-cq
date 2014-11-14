@@ -24,15 +24,22 @@ actions :create, :delete, :enable, :disable, :activate, :deactivate
 
 default_action :nothing
 
+# Agent name and title (friendly name)
 attribute :name, :kind_of => String, :name_attribute => true, :required => true
+attribute :title, :kind_of => String
+
+# CQ instance info and credentials
 attribute :username, :kind_of => String, :required => true
 attribute :password, :kind_of => String, :required => true
 attribute :instance, :kind_of => String, :required => true
-attribute :target, :kind_of => String, :required => true
+
+# Target that agent aims at
+attribute :target, :kind_of => String
+attribute :target_user, :kind_of => String
+attribute :target_pass, :kind_of => String
 
 # Instance types: author, publish. This helps defining whether the agent path should contain agents.publish or agents.author
 attribute :instance_type, :kind_of => String, :required => true
 
 # Agent types: replication, reverse_replication, flush
-attribute :type, :kind_of => String, :required => true
-attribute :title, :kind_of => String, :required => true
+attribute :type, :kind_of => String
