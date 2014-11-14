@@ -34,7 +34,7 @@ attribute :password, :kind_of => String, :required => true
 attribute :instance, :kind_of => String, :required => true
 
 # Target that agent aims at
-attribute :target, :kind_of => String
+attribute :target_instance, :kind_of => String
 attribute :target_user, :kind_of => String
 attribute :target_pass, :kind_of => String
 
@@ -42,4 +42,4 @@ attribute :target_pass, :kind_of => String
 attribute :instance_type, :kind_of => String, :required => true
 
 # Agent types: replication, reverse_replication, flush
-attribute :type, :kind_of => String
+attribute :agent_type, :kind_of => String

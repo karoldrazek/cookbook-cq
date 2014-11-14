@@ -22,39 +22,39 @@ def whyrun_supported?
 end
 
 # Common parameters for replication agent
-repl_agent_common = 
+$repl_agent_common = 
   "-n enabled -v true "\
-  "-n jcr:primaryType -v nt:unstructured "\
+  "-n \"jcr:primaryType\" -v \"nt:unstructured\" "\
   "-n logLevel -v info "\
   "-n retryDelay -v 60000 "\
-  "-n jcr:description -v \"Replication agent\" "\
+  "-n \"jcr:description\" -v \"Replication agent\" "\
   "-n serializationType -v durbo "\
-  "-n sling:resourceType -v cq/replication/components/agent "\
-  "-n cq:template -v /libs/cq/replication/templates/agent"
+  "-n \"sling:resourceType\" -v \"cq/replication/components/agent\" "\
+  "-n \"cq:template\" -v \"/libs/cq/replication/templates/agent\""
 
 # Common parameters for reverse replication agent
-reverse_repl_agent_common =
+$reverse_repl_agent_common =
   "-n enabled -v true "\
-  "-n jcr:primaryType -v nt:unstructured "\
+  "-n \"jcr:primaryType\" -v \"nt:unstructured\" "\
   "-n logLevel -v info "\
   "-n retryDelay -v 60000 "\
-  "-n jcr:description -v \"Reverse replication agent\" "\
+  "-n \"jcr:description\" -v \"Reverse replication agent\" "\
   "-n serializationType -v durbo "\
-  "-n sling:resourceType -v cq/replication/components/revagent "\
-  "-n cq:template -v /libs/cq/replication/templates/revagent "\
+  "-n \"sling:resourceType\" -v \"cq/replication/components/revagent\" "\
+  "-n \"cq:template\" -v \"/libs/cq/replication/templates/revagent\" "\
   "-n protocolHTTPMethod -v GET "\
   "-n reverseReplication -v true"
 
 # Common parameters for cache invalidation (flush) agent
-flush_agent_common =
+$flush_agent_common =
   "-n enabled -v true "\
-  "-n jcr:primaryType -v nt:unstructured "\
+  "-n \"jcr:primaryType\" -v \"nt:unstructured\" "\
   "-n logLevel -v error "\
   "-n retryDelay -v 60000 "\
-  "-n jcr:description -v \" agent\" "\
+  "-n \"jcr:description\" -v \"Flush agent\" "\
   "-n serializationType -v flush "\
-  "-n sling:resourceType -v cq/replication/components/agent "\
-  "-n cq:template -v /libs/cq/replication/templates/agent "\
+  "-n \"sling:resourceType\" -v \"cq/replication/components/agent\" "\
+  "-n \"cq:template\" -v \"/libs/cq/replication/templates/agent\" "\
   "-n protocolHTTPMethod -v GET "\
   "-n reverseReplication -v true "\
   "-n protocolHTTPHeaders -v \"CQ-Action:{action}\" "\
@@ -64,8 +64,105 @@ flush_agent_common =
   "-n triggerReceive -v true "\
   "-n triggerSpecific -v true"
 
-def create_agent
+# Actions definitions
 
+def create_agent
+  case "#{new_resource.agent_type}"
+  
+  # Case with creating replication agent
+  when 'replication'
+    # Create root node
+    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+            "-i #{new_resource.instance} "\
+            "-u #{new_resource.username} "\
+            "-p #{new_resource.password} "\
+            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name} "\
+            "-n \"jcr:primaryType\" -v \"cq:Page\""
+    cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
+
+    Chef::Log.debug "Executing #{cmd_str}"
+    Chef::Log.info "Creating root node for agent #{new_resource.name}"
+    cmd.run_command
+    
+    # Create jcr:content for node
+    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+            "-i #{new_resource.instance} "\
+            "-u #{new_resource.username} "\
+            "-p #{new_resource.password} "\
+            "-a \"/etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content\" "\
+            "-n transportUri -v \"#{new_resource.target_instance}/bin/receive?sling:authRequestLogin=1\" "\
+            "-n transportUser -v #{new_resource.target_user} "\
+            "-n transportPassword -v \"#{new_resource.target_pass}\" "\
+            "#{$repl_agent_common}"
+    cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
+
+    Chef::Log.debug "Executing #{cmd_str}"
+    Chef::Log.info "Creating jcr:content for agent #{new_resource.name}"
+    cmd.run_command
+
+  # Case with creating reverse replication agent
+  when 'reverse_replication'
+    # Create root node
+    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+            "-i #{new_resource.instance} "\
+            "-u #{new_resource.username} "\
+            "-p #{new_resource.password} "\
+            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name} "\
+            "-n \"jcr:primaryType\" -v \"cq:Page\""
+    cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
+
+    Chef::Log.debug "Executing #{cmd_str}"
+    Chef::Log.info "Creating root node for agent #{new_resource.name}"
+    cmd.run_command
+    
+    # Create jcr:content for node
+    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+            "-i #{new_resource.instance} "\
+            "-u #{new_resource.username} "\
+            "-p #{new_resource.password} "\
+            "-a \"/etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content\" "\
+            "-n transportUri -v \"#{new_resource.target_instance}/bin/receive?sling:authRequestLogin=1\" "\
+            "-n transportUser -v #{new_resource.target_user} "\
+            "-n transportPassword -v \"#{new_resource.target_pass}\" "\
+            "#{$reverse_repl_agent_common}"
+    cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
+
+    Chef::Log.debug "Executing #{cmd_str}"
+    Chef::Log.info "Creating jcr:content for agent #{new_resource.name}"
+    cmd.run_command
+
+  # Case with creating flush agent
+  when 'flush'
+    # Create root node
+    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+            "-i #{new_resource.instance} "\
+            "-u #{new_resource.username} "\
+            "-p #{new_resource.password} "\
+            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name} "\
+            "-n \"jcr:primaryType\" -v \"cq:Page\""
+    cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
+
+    Chef::Log.debug "Executing #{cmd_str}"
+    Chef::Log.info "Creating root node for agent #{new_resource.name}"
+    cmd.run_command
+    
+    # Create jcr:content for node
+    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+            "-i #{new_resource.instance} "\
+            "-u #{new_resource.username} "\
+            "-p #{new_resource.password} "\
+            "-a \"/etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content\" "\
+            "-n transportUri -v \"#{new_resource.target_instance}/dispatcher/invalidate.cache\" "\
+            "#{$flush_agent_common}"
+    cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
+
+    Chef::Log.debug "Executing #{cmd_str}"
+    Chef::Log.info "Creating jcr:content for agent #{new_resource.name}"
+    cmd.run_command
+
+  else 
+    Chef::Log.error "Missed agent type"
+  end
 end
 
 def delete_agent
@@ -87,7 +184,7 @@ def enable_agent
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
-            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content "\
+            "-a \"/etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content\" "\
             "-n enabled -v true"
 
   cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
@@ -102,7 +199,7 @@ def disable_agent
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
-            "-a /etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content "\
+            "-a \"/etc/replication/agents.#{new_resource.instance_type}/#{new_resource.name}/jcr:content\" "\
             "-n enabled -v false"
 
   cmd = Mixlib::ShellOut.new(cmd_str, :timeout => 60)
@@ -146,7 +243,7 @@ end
 
 # Create agent
 action :create do
-
+  create_agent
 end
 
 # Delete agent
