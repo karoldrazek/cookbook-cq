@@ -100,3 +100,4 @@ include_recipe 'java'
 # CQ Unix Toolkit installation
 # -----------------------------------------------------------------------------
 include_recipe 'cq-unix-toolkit'
+include_recipe 'cq-unix-toolkit-cqjcr'

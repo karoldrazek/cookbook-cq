@@ -15,7 +15,10 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-#
+
+# This cookbook temporarily uses cq-unix-toolkit-cqjcr cookbook. This is because currently 'package'
+# provider uses different version of cq-unix-toolkit with excluding options
+# After CQJCR and CQREPKG are in the same cookbook please replace 'cq-unix-toolkit-cqjcr' with 'cq-unix-toolkit'
  
 def whyrun_supported?
   true
@@ -72,7 +75,7 @@ def create_agent
   # Case with creating replication agent
   when 'replication'
     # Create root node
-    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+    cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
@@ -85,7 +88,7 @@ def create_agent
     cmd.run_command
     
     # Create jcr:content for node
-    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+    cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
@@ -103,7 +106,7 @@ def create_agent
   # Case with creating reverse replication agent
   when 'reverse_replication'
     # Create root node
-    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+    cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
@@ -116,7 +119,7 @@ def create_agent
     cmd.run_command
     
     # Create jcr:content for node
-    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+    cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
@@ -134,7 +137,7 @@ def create_agent
   # Case with creating flush agent
   when 'flush'
     # Create root node
-    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+    cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
@@ -147,7 +150,7 @@ def create_agent
     cmd.run_command
     
     # Create jcr:content for node
-    cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+    cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
@@ -166,7 +169,7 @@ def create_agent
 end
 
 def delete_agent
-  cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+  cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
@@ -180,7 +183,7 @@ def delete_agent
 end
 
 def enable_agent
-  cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+  cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\
@@ -195,7 +198,7 @@ def enable_agent
 end
 
 def disable_agent
-  cmd_str = "#{node['cq-unix-toolkit']['install_dir']}/cqjcr "\
+  cmd_str = "#{node['cq-unix-toolkit-cqjcr']['install_dir']}/cqjcr "\
             "-i #{new_resource.instance} "\
             "-u #{new_resource.username} "\
             "-p #{new_resource.password} "\

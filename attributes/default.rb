@@ -27,9 +27,9 @@ default['cq']['home_dir'] = "#{node['cq']['base_dir']}/cq"
 default['cq']['version'] = '5.6.1'
 default['cq']['custom_tmp_dir'] = '/opt/tmp'
 default['cq']['package_cache'] = ''
-default['cq']['jar']['url'] = ''
+default['cq']['jar']['url'] = 'https://box.cognifide.com/cq/5.6.1/cq-quickstart-5.6.1.jar'
 default['cq']['jar']['checksum'] = ''
-default['cq']['license']['url'] = ''
+default['cq']['license']['url'] = 'https://box.cognifide.com/license/license.properties'
 default['cq']['license']['checksum'] = ''
 
 # Java attributes
