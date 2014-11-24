@@ -19,6 +19,23 @@
 # This cookbook temporarily uses cq-unix-toolkit-cqjcr cookbook. This is because currently 'package'
 # provider uses different version of cq-unix-toolkit with excluding options
 # After CQJCR and CQREPKG are in the same cookbook please replace 'cq-unix-toolkit-cqjcr' with 'cq-unix-toolkit'
+
+
+# Example usage in cookbooks
+#
+# cq_agent 'flushTest' do
+#   username 'admin'
+#   password 'admin'
+#   instance 'http://localhost:4502'
+#   instance_type 'publish'
+#   title 'FlushTest'
+#   target_instance 'http://localhost:8080'
+#   target_user 'admin'
+#   target_pass 'admin'
+#   agent_type 'flush'
+#   action :create
+# end
+#
  
 def whyrun_supported?
   true
@@ -70,7 +87,7 @@ $flush_agent_common =
 # Actions definitions
 
 def create_agent
-  case "#{new_resource.agent_type}"
+  case new_resource.agent_type
   
   # Case with creating replication agent
   when 'replication'
@@ -164,7 +181,7 @@ def create_agent
     cmd.run_command
 
   else 
-    Chef::Log.error "Missed agent type"
+    Chef::Application.fatal!("Wrong agent type: #{new_resource.agent_type}")
   end
 end
 
@@ -246,30 +263,54 @@ end
 
 # Create agent
 action :create do
-  create_agent
+  begin
+    create_agent
+  rescue
+    Chef::Application.fatal!("Creating agent named: #{new_resource.name} failed!")
+  end
 end
 
 # Delete agent
 action :delete do
-  delete_agent
+  begin
+    delete_agent
+  rescue
+    Chef::Application.fatal!("Deleting agent named: #{new_resource.name} failed!")
+  end
 end
 
 # Enable agent
 action :enable do
-  enable_agent
+  begin
+    enable_agent
+  rescue
+    Chef::Application.fatal!("Enabling agent named: #{new_resource.name} failed!")
+  end
 end
 
 # Disable agent
 action :disable do
-  disable_agent
+  begin
+    disable_agent
+  rescue
+    Chef::Application.fatal!("Disabling agent named: #{new_resource.name} failed!")
+  end
 end
 
 # Activate agent
 action :activate do
-  activate_agent
+  begin
+    activate_agent
+  rescue
+    Chef::Application.fatal!("Activating agent named: #{new_resource.name} failed!")
+  end
 end
 
 # Deactivate agent
 action :deactivate do
-  deactivate_agent
+  begin
+    deactivate_agent
+  rescue
+    Chef::Application.fatal!("Deactivating agent named: #{new_resource.name} failed!")
+  end
 end
