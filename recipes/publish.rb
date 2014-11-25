@@ -19,7 +19,7 @@
 
 # Make sure that all prerequisites are in place
 # -----------------------------------------------------------------------------
-include_recipe 'cq::commons'
+include_recipe 'cq-agent::commons'
 
 # Create publish instance
 # -----------------------------------------------------------------------------
