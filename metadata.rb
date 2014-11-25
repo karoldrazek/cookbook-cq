@@ -1,4 +1,4 @@
-name             'cq-agent'
+name             'cq_agent'
 maintainer       'Jakub Wadolowski, Karol Drazek'
 maintainer_email 'jakub.wadolowski@cognifide.com, karol.drazek@cognifide.com'
 license          'Apache 2.0'
