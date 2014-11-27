@@ -575,7 +575,7 @@ def load_current_resource
   pkg_mgr_bundle_healthcheck
   pkg_mgr_api_healthcheck
 
-  @current_resource = Chef::Resource::CqPackage.new(new_resource.name)
+  @current_resource = Chef::Resource::CqAgentPackage.new(new_resource.name)
 
   # Load "state" attributes from new resource
   @current_resource.username(new_resource.username)
