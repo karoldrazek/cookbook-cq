@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: cq
+# Cookbook Name:: cq_agent
 # Resource:: agent
 #
 # Copyright (C) 2014 Karol Drazek

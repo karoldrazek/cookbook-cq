@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: cq
+# Cookbook Name:: cq_agent
 # Recipe:: author
 #
 # Copyright (C) 2014 Jakub Wadolowski

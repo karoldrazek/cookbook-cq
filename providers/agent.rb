@@ -1,5 +1,5 @@
 #
-# Cookbook Name:: cq
+# Cookbook Name:: cq_agent
 # Provider:: agent
 #
 # Copyright (C) 2014 Karol Drazek
@@ -19,7 +19,6 @@
 # This cookbook temporarily uses cq-unix-toolkit cookbook. This is because currently 'package'
 # provider uses different version of cq-unix-toolkit with excluding options
 # After CQJCR and CQREPKG are in the same cookbook please replace 'cq-unix-toolkit' with 'cq-unix-toolkit'
-
 
 # Example usage in cookbooks
 #
@@ -83,6 +82,7 @@ $flush_agent_common =
   "-n noVersioning -v true "\
   "-n triggerReceive -v true "\
   "-n triggerSpecific -v true"
+
 
 # Actions definitions
 

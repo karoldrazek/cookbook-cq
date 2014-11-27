@@ -1,6 +1,6 @@
 # ~FC015
 #
-# Cookbook Name:: cq
+# Cookbook Name:: cq_agent
 # Definition:: instance
 #
 # Copyright (C) 2014 Jakub Wadolowski
